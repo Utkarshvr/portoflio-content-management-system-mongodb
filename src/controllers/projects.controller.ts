@@ -75,3 +75,20 @@ export const getAllProjects = async (req: Request, res: Response) => {
     return res.status(500).json({ error });
   }
 };
+
+export const toggleProjectStatus = async (req: Request, res: Response) => {
+  const { isActive }: { isActive: boolean } = req.body;
+  const { projectID }: { projectID?: string | null } = req.params;
+
+  if (typeof isActive !== "boolean")
+    return res.status(400).json({ msg: "isActive must be a boolean" });
+
+  try {
+    const proj = await Projects.findById(projectID);
+    proj.isActive = isActive;
+    await proj.save();
+    return res.status(200).json({ project: proj });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};

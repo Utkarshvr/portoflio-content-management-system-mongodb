@@ -3,6 +3,7 @@ import upload from "@/middlewares/multer.middlewares";
 import {
   createProject,
   getAllProjects,
+  toggleProjectStatus,
 } from "@/controllers/projects.controller";
 
 const projectRoute = Router();
@@ -17,5 +18,6 @@ projectRoute.post(
   ]),
   createProject
 );
+projectRoute.put("/toggle-status/:projectID", toggleProjectStatus);
 
 export default projectRoute;
