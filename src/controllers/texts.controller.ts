@@ -56,3 +56,14 @@ export const updateText = async (req: Request, res: Response) => {
     return res.status(500).json({ error });
   }
 };
+
+export const deleteText = async (req: Request, res: Response) => {
+  const { textID }: { textID?: string | null } = req.params;
+
+  try {
+    await Texts.findByIdAndDelete(textID).lean();
+    return res.status(200).json({ msg: "Text is deleted" });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};

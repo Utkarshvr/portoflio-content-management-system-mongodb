@@ -21,6 +21,11 @@ const Schema = new mongoose.Schema(
     tools: {
       type: [String],
     },
+
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

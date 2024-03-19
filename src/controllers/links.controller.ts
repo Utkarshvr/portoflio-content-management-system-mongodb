@@ -56,3 +56,14 @@ export const update = async (req: Request, res: Response) => {
     return res.status(500).json({ error });
   }
 };
+
+export const deleteLink = async (req: Request, res: Response) => {
+  const { linkID }: { linkID?: string | null } = req.params;
+
+  try {
+    await Links.findByIdAndDelete(linkID).lean();
+    return res.status(200).json({ msg: "Link is deleted" });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};
