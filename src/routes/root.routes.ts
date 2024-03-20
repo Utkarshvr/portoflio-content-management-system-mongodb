@@ -1,7 +1,7 @@
 import { Router, json } from "express";
 import textRoute from "./texts.routes";
 import linkRoute from "./links.routes";
-import uploadRoute from "./upload.routes";
+import mediaRoutes from "./media.routes";
 import projectRoute from "./projects.routes";
 
 const rootRoute = Router();
@@ -12,7 +12,7 @@ rootRoute.get("/", (req, res) => {
   res.json("Welcome to the Portfolio API");
 });
 
-rootRoute.use("/upload", uploadRoute);
+rootRoute.use("/media", mediaRoutes);
 
 rootRoute.use("/projects", projectRoute);
 

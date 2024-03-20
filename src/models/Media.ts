@@ -2,12 +2,9 @@ import mongoose from "mongoose";
 
 const Schema = new mongoose.Schema(
   {
+    name: String,
     media: {
       type: Object,
-      required: true,
-    },
-    identifier: {
-      type: String,
       required: true,
     },
   },
