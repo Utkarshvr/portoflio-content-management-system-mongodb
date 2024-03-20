@@ -1,5 +1,6 @@
 import Projects from "@/models/Projects";
 import { uploadOnCloudinary } from "@/utils/cloudinary";
+import { UploadApiResponse } from "cloudinary";
 import { Request, Response } from "express";
 
 export const createProject = async (req: Request, res: Response) => {
@@ -18,11 +19,13 @@ export const createProject = async (req: Request, res: Response) => {
         .json({ msg: "Max 5 Images are allowed at the time of creating" });
 
     // Upload All Images
-    const uploadedImages = await Promise.all(
+    const uploadedImages: UploadApiResponse[] = await Promise.all(
       imagesPaths
         ?.map(async (img: any) => {
           try {
-            const uploadedImg = img ? await uploadOnCloudinary(img) : null;
+            const uploadedImg: UploadApiResponse = img
+              ? await uploadOnCloudinary(img)
+              : null;
             return uploadedImg;
           } catch (error) {
             console.log(error);
@@ -32,7 +35,9 @@ export const createProject = async (req: Request, res: Response) => {
         ?.filter((e: any) => !!e)
     );
 
-    const uploadedIcon = iconPath ? await uploadOnCloudinary(iconPath) : null;
+    const uploadedIcon: UploadApiResponse = iconPath
+      ? await uploadOnCloudinary(iconPath)
+      : null;
 
     console.log({ uploadedImages, uploadedIcon });
 
