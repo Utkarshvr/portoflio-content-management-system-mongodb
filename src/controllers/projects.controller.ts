@@ -34,8 +34,11 @@ export const createProject = async (req: Request, res: Response) => {
 };
 
 export const getAllProjects = async (req: Request, res: Response) => {
+  const { isActive } = req.query;
   try {
-    const projects = await Projects.find()
+    const projects = await Projects.find({
+      isActive: isActive ? isActive === "yes" : true,
+    })
       .populate(["icon", "images", "tools"])
       .lean();
     return res.status(200).json({ projects });
