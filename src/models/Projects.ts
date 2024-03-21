@@ -14,9 +14,7 @@ const Schema = new mongoose.Schema(
     source: String,
     visit: String,
 
-    tools: {
-      type: [String],
-    },
+    tools: { type: [mongoose.Schema.Types.ObjectId], ref: "media" },
 
     isActive: {
       type: Boolean,

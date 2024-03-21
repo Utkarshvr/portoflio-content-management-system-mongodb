@@ -35,7 +35,9 @@ export const createProject = async (req: Request, res: Response) => {
 
 export const getAllProjects = async (req: Request, res: Response) => {
   try {
-    const projects = await Projects.find().populate(["icon", "images"]).lean();
+    const projects = await Projects.find()
+      .populate(["icon", "images", "tools"])
+      .lean();
     return res.status(200).json({ projects });
   } catch (error) {
     return res.status(500).json({ error });
