@@ -39,6 +39,7 @@ export const getAllActiveProjects = async (req: Request, res: Response) => {
       isActive: true,
     })
       .populate(["icon", "images", "tools"])
+      .sort({ createdAt: -1 })
       .lean();
     return res.status(200).json({ projects });
   } catch (error) {
@@ -49,6 +50,7 @@ export const getAllProjects = async (req: Request, res: Response) => {
   try {
     const projects = await Projects.find()
       .populate(["icon", "images", "tools"])
+      .sort({ createdAt: -1 })
       .lean();
 
     return res.status(200).json({ projects });
