@@ -7,6 +7,10 @@ const Schema = new mongoose.Schema(
       type: Object,
       required: true,
     },
+    isTool: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

@@ -9,8 +9,9 @@ import { Request, Response } from "express";
 export const uploadSingleFile = async (req: Request, res: Response) => {
   const media = req.file;
   const { name } = req.body;
+  const { isTool } = req.query;
 
-  // console.log({ name, media: media?.path });
+  console.log({ isTool });
 
   if (!media) return res.status(400).json({ msg: "Media File is not present" });
   try {
@@ -25,6 +26,7 @@ export const uploadSingleFile = async (req: Request, res: Response) => {
         const newMedia = await Media.create({
           name: name || uploadedMedia.public_id,
           media: uploadedMedia,
+          isTool: isTool === "yes",
         });
         return res.status(201).json({
           msg: "Media File Uploaded",
@@ -44,9 +46,13 @@ export const uploadSingleFile = async (req: Request, res: Response) => {
 };
 
 export const getAllMedia = async (req: Request, res: Response) => {
+  const { isTool } = req.query;
+
   try {
     // Fetch all media from the database
-    const allMedia = await Media.find().sort({ createdAt: -1 });
+    const allMedia = await Media.find({ isTool: isTool === "yes" }).sort({
+      createdAt: -1,
+    });
 
     // Send the response with the fetched media
     res.status(200).json({ media: allMedia });
