@@ -1,62 +1,23 @@
 import Projects from "@/models/Projects";
-import { uploadOnCloudinary } from "@/utils/cloudinary";
-import { UploadApiResponse } from "cloudinary";
 import { Request, Response } from "express";
 
 export const createProject = async (req: Request, res: Response) => {
   try {
-    const files = req.files as any;
-
-    const iconPath = files?.icon ? files?.icon[0]?.path : null;
-
-    const imagesPaths = files?.images
-      ? files?.images?.map((img: any) => img?.path)
-      : [];
-
-    if (imagesPaths?.length > 5)
-      return res
-        .status(400)
-        .json({ msg: "Max 5 Images are allowed at the time of creating" });
-
-    // Upload All Images
-    const uploadedImages: UploadApiResponse[] = await Promise.all(
-      imagesPaths
-        ?.map(async (img: any) => {
-          try {
-            const uploadedImg: UploadApiResponse = img
-              ? await uploadOnCloudinary(img)
-              : null;
-            return uploadedImg;
-          } catch (error) {
-            console.log(error);
-            return null;
-          }
-        })
-        ?.filter((e: any) => !!e)
-    );
-
-    const uploadedIcon: UploadApiResponse = iconPath
-      ? await uploadOnCloudinary(iconPath)
-      : null;
-
-    console.log({ uploadedImages, uploadedIcon });
-
-    const { title, description, tools, source, visit, type } = req.body;
+    const { title, description, tools, source, visit, type, icon, images } =
+      req.body;
 
     try {
       const newProject = await Projects.create({
         title,
-        description,
-        tools,
+        description: description || "",
+        tools: tools || [],
         source,
         visit,
         type,
 
-        icon: uploadedIcon?.secure_url || "",
+        icon: icon,
 
-        images: uploadedImages
-          ?.map((img) => img?.secure_url)
-          ?.filter((e) => !!e),
+        images: images,
       });
       console.log("Created new project");
       return res.status(201).json({ project: newProject });
@@ -74,7 +35,7 @@ export const createProject = async (req: Request, res: Response) => {
 
 export const getAllProjects = async (req: Request, res: Response) => {
   try {
-    const projects = await Projects.find().lean();
+    const projects = await Projects.find().populate(["icon", "images"]).lean();
     return res.status(200).json({ projects });
   } catch (error) {
     return res.status(500).json({ error });
@@ -89,6 +50,17 @@ export const toggleProjectStatus = async (req: Request, res: Response) => {
     proj.isActive = !proj.isActive;
     await proj.save();
     return res.status(200).json({ project: proj });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};
+
+export const deleteProject = async (req: Request, res: Response) => {
+  const { projectID }: { projectID?: string | null } = req.params;
+
+  try {
+    await Projects.findByIdAndDelete(projectID);
+    return res.status(200).json({ msg: "Project deleted successfully" });
   } catch (error) {
     return res.status(500).json({ error });
   }

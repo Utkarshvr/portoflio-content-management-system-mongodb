@@ -2,21 +2,17 @@ import mongoose from "mongoose";
 
 const Schema = new mongoose.Schema(
   {
-    icon: String,
-
-    title: String,
+    title: {
+      type: String,
+      required: true,
+    },
     description: String,
 
-    images: [String],
+    icon: { type: mongoose.Schema.Types.ObjectId, ref: "media" },
+    images: { type: [mongoose.Schema.Types.ObjectId], ref: "media" },
 
     source: String,
     visit: String,
-
-    type: {
-      type: String,
-      enum: ["application", "website"],
-      required: true,
-    },
 
     tools: {
       type: [String],
