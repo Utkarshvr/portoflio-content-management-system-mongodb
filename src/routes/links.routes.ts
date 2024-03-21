@@ -6,12 +6,14 @@ import {
   getAll,
   update,
 } from "@/controllers/links.controller";
+import isAuth from "@/middlewares/auth/isAuth";
 
 const linkRoute = Router();
 
 linkRoute.get("/", getAll);
-linkRoute.post("/", create);
 
+linkRoute.use(isAuth);
+linkRoute.post("/", create);
 linkRoute.get("/:type", get);
 linkRoute.put("/:linkID", update);
 linkRoute.delete("/:linkID", deleteLink);
