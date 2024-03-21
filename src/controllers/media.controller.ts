@@ -57,6 +57,22 @@ export const getAllMedia = async (req: Request, res: Response) => {
   }
 };
 
+export const getMediaByName = async (req: Request, res: Response) => {
+  const { name } = req.params;
+
+  try {
+    // Fetch all media from the database
+    const media = await Media.findOne({ name });
+
+    // Send the response with the fetched media
+    res.status(200).json({ media });
+  } catch (error) {
+    // Handle errors
+    console.error("Error fetching all media:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
 export const editMedia = async (req: Request, res: Response) => {
   const { mediaID } = req.params;
   const { name } = req.body;
